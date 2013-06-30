@@ -178,7 +178,8 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
     p "X>>>> replicaset_name: #{replicaset_name}"
     if !replicaset_name.nil?
       p "X>>>> replicaset_name: #{replicaset_name}"
-      notifies :create, "ruby_block[config_replicaset]", :immediately
+      notifies :create, "ruby_block[config_replicaset]"
+      notifies :restart, "ruby_block[config_replicaset]"
     end
     if type == "mongos"
       notifies :create, "ruby_block[config_sharding]", :immediately
@@ -203,7 +204,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
     p ">>>>>>>>>>>>>>>>> nodes: #{rs_nodes}"
 
     p ">>>>>>>>>>>>>>>>> replicaset: #{replicaset}"
-    p ">>>>>>>>>>>>>>>>> replicaset: #{replicaset.nil?}"
+    p ">>>>>>>>>>>>>>>>> replicaset.nil?: #{replicaset.nil?}"
     ruby_block "config_replicaset" do
       block do
         p "ruby_block replicaset: #{replicaset}"
