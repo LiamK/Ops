@@ -61,10 +61,13 @@ when "centos","redhat","fedora","amazon","scientific"
 when "ubuntu"
   default[:mongodb][:defaults_dir] = "/etc/default"
   default[:mongodb][:init_dir] = "/etc/init"
-  default[:mongodb][:init_script_template] = "mongodb.upstart.erb"
+  #default[:mongodb][:init_script_template] = "mongodb.upstart.erb"
+  default[:mongodb][:init_script_template] = "mongodb.init.erb"
   default[:mongodb][:root_group] = "root"
   default[:mongodb][:package_name] = "mongodb-10gen"
-  default[:mongodb][:apt_repo] = "ubuntu-upstart"
+  #default[:mongodb][:apt_repo] = "ubuntu-upstart"
+  # added thist... LK
+  default[:mongodb][:apt_repo] = "debian-sysvinit"
 
 else
   default[:mongodb][:defaults_dir] = "/etc/default"
