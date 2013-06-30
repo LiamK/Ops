@@ -174,7 +174,10 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
     unless service_notifies.empty?
       notifies service_notifies
     end
+    p "X>>>> name: #{name}"
+    p "X>>>> replicaset_name: #{replicaset_name}"
     if !replicaset_name.nil?
+      p "X>>>> replicaset_name: #{replicaset_name}"
       notifies :create, "ruby_block[config_replicaset]"
     end
     if type == "mongos"
