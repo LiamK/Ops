@@ -203,9 +203,10 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
     p ">>>>>>>>>>>>>>>>> replicaset: #{replicaset.nil?}"
     ruby_block "config_replicaset" do
       block do
-        if not replicaset.nil?
-          p ">>>>>>>>>>>>>>>>> configuring: #{replicaset} #{replicaset_name} #{rs_nodes}"
+        if not replicaset_name.nil?
+          p ">>>>>>>>>>>>>>>>> replicaset not nil: #{replicaset} #{replicaset_name} #{rs_nodes}"
           if not node[:mongodb][:use_ebs_snapshots]
+            p ">>>>>>>>>>>>>>>>> configuring: #{replicaset} #{replicaset_name} #{rs_nodes}"
             MongoDB.configure_replicaset(replicaset, replicaset_name, rs_nodes)
           end
         end
