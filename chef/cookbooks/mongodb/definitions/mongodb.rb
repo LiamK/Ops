@@ -187,7 +187,9 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   end
 
   # replicaset
+  p ">>>>>>>>>>>>>>>>> replicaset_name: #{replicaset_name}"
   if !replicaset_name.nil?
+    p ">>>>>>>>>>>>>>>>> getting nodes"
     rs_nodes = search(
       :node,
       "mongodb_cluster_name:#{replicaset['mongodb']['cluster_name']} AND \
@@ -195,10 +197,12 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
        mongodb_shard_name:#{replicaset['mongodb']['shard_name']} AND \
        chef_environment:#{replicaset.chef_environment}"
     )
+    p ">>>>>>>>>>>>>>>>> nodes: #{rs_nodes}"
 
     ruby_block "config_replicaset" do
       block do
         if not replicaset.nil?
+          p ">>>>>>>>>>>>>>>>> configuring: #{replicaset} #{replicaset_name} #{rs_nodes}"
           if not node[:mongodb][:use_ebs_snapshots]
             MongoDB.configure_replicaset(replicaset, replicaset_name, rs_nodes)
           end
