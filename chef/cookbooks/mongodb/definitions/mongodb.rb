@@ -199,6 +199,8 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
     )
     p ">>>>>>>>>>>>>>>>> nodes: #{rs_nodes}"
 
+    p ">>>>>>>>>>>>>>>>> replicaset: #{replicaset}"
+    p ">>>>>>>>>>>>>>>>> replicaset: #{replicaset.nil?}"
     ruby_block "config_replicaset" do
       block do
         if not replicaset.nil?
