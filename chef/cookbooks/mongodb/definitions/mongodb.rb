@@ -212,6 +212,9 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
           p "ruby_block >> ebs_snaps: #{node[:mongodb][:use_ebs_snapshots]}"
           if not node[:mongodb][:use_ebs_snapshots]
             p "ruby_block >> configuring: #{replicaset} #{replicaset_name} #{rs_nodes}"
+            p "sleeping... "
+	    sleep 60
+	    p "awake!"
             MongoDB.configure_replicaset(replicaset, replicaset_name, rs_nodes)
           end
 	else
