@@ -174,10 +174,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
     unless service_notifies.empty?
       notifies service_notifies
     end
-    p "service >> name: #{name}"
-    p "service >> replicaset_name: #{replicaset_name}"
     if !replicaset_name.nil?
-      p "service notifies >> replicaset_name: #{!replicaset_name.nil?}"
       notifies :create, "ruby_block[config_replicaset]"
     end
     if type == "mongos"
@@ -190,9 +187,7 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
   end
 
   # replicaset
-  p ">> replicaset_name: #{replicaset_name}"
   if !replicaset_name.nil?
-    p ">> getting nodes"
     rs_nodes = search(
       :node,
       "mongodb_cluster_name:#{replicaset['mongodb']['cluster_name']} AND \
@@ -200,24 +195,13 @@ define :mongodb_instance, :mongodb_type => "mongod" , :action => [:enable, :star
        mongodb_shard_name:#{replicaset['mongodb']['shard_name']} AND \
        chef_environment:#{replicaset.chef_environment}"
     )
-    p ">> nodes: #{rs_nodes}"
 
-    p ">> replicaset: #{replicaset}"
-    p ">> replicaset.nil?: #{replicaset.nil?}"
     ruby_block "config_replicaset" do
       block do
-        p "ruby_block replicaset: #{replicaset}"
-        p "ruby_block replicaset.nil?: #{replicaset.nil?}"
         if not replicaset.nil?
-          p "ruby_block >> ebs_snaps: #{node[:mongodb][:use_ebs_snapshots]}"
           if not node[:mongodb][:use_ebs_snapshots]
-            p "ruby_block >> configuring: #{replicaset} #{replicaset_name} #{rs_nodes}"
-            p "sleeping... "
-	    sleep 180
-	    p "awake!"
             MongoDB.configure_replicaset(replicaset, replicaset_name, rs_nodes)
           end
-	else
         end
       end
       action :nothing
