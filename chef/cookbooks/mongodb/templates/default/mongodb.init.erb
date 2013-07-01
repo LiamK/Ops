@@ -92,6 +92,15 @@ running() {
     [ ! -f "$PIDFILE" ] && return 1
     pid=`cat $PIDFILE`
     running_pid $pid $DAEMON || return 1
+    # Timing bug in replicaset configuation fix
+    # https://github.com/mongodb/mongo/commit/
+    # 695c026fa64677f7661e940fe26a116041fed479
+    for i in `seq 1 20`; do
+      nc -z localhost <%= node['mongodb']['port'] %> && return 0
+      echo -n "."
+      sleep 15
+    done
+    return 0
     return 0
 }
 
