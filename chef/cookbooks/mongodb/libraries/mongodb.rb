@@ -41,12 +41,15 @@ class Chef::ResourceDefinitionList::MongoDB
     # for a while before giving up.
     num_tries = 10
     sleep_time = 20
+    Chef::Log.info("Connecting to database: 'localhost:#{node['mongodb']['port']}'")
     begin
       num_tries -= 1
       connection = Mongo::Connection.new('localhost', node['mongodb']['port'], :op_timeout => 5, :slave_ok => true)
+    Chef::Log.info("Connected to database: 'localhost:#{node['mongodb']['port']}'")
     rescue
       sleep sleep_time
       if num_tries > 0
+        Chef::Log.warn("Retry connecting to database: 'localhost:#{node['mongodb']['port']}'")
         retry
       else
         Chef::Log.warn("Could not connect to database: 'localhost:#{node['mongodb']['port']}'")
